@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
-import Home from './routes/Home'
+import Home from './routes/home'
 import Delete from './routes/Delete'
 import Update from './routes/Update'
 import Create from './routes/Create'
@@ -15,8 +15,8 @@ const router = createBrowserRouter([
         element: <Home />
     },
     {
-        path: "/Delete",
-        element: <Delete />
+        path: "/Delete",
+        element: <Delete />
     },
     {
         path: "/Create",
