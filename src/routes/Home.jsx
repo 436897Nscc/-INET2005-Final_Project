@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
   import { createRoot } from 'react-dom/client'
 
   import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
+// https://www.freecodecamp.org/news/how-to-fetch-api-data-in-react/
 export default function Home(){
     import.meta.env.VITE_API_HOST;
     const [bio, setBio] = useState(null);
@@ -12,7 +12,7 @@ export default function Home(){
     useEffect(() => {
       // Fetch data from API
       async function fetchData() {
-        const response = await fetch('https://pokeapi.co/api/v2/pokemon/ditto'); 
+        const response = await fetch('http://localhost:3000/api/contacts/all'); 
         const data = await response.json();
         if (!ignore) {
           setBio(data);
@@ -25,6 +25,7 @@ export default function Home(){
          ignore = true;
       }
     }, []);
+    
     return(
       <>
       <h1>My Contacts</h1>
@@ -42,7 +43,11 @@ export default function Home(){
               <Link to="/delete">Delete</Link>
             </p>
       </header>
-      
+      { <p>{bio.map((bios) => (
+        <img key={bios.id} src={bios.url} alt={bios.title} width={100} />
+        
+      ))}</p>}
+
       
     </>
             

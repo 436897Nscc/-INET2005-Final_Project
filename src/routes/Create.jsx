@@ -13,20 +13,6 @@ export default function Create(){
     // https://stackoverflow.com/questions/68505071/how-do-i-post-form-data-using-fetch-and-react   
     
     const { register, handleSubmit, formState: { errors, isSubmitting, touchedFields, submitCount } } = useForm();
-    async function fetchData() {
-        const response = await fetch('http://localhost:3000/api/contacts/create'); 
-        const data = await response.json();
-        if (!ignore) {
-          setBio(data);
-        }
-      
-  
-      let ignore = false;
-        fetchData();
-      return () => {
-         ignore = true;
-      }
-    }
     const onSubmit = async (e) => {
         console.log(JSON.stringify(e));
         console.log('Submitting form');
@@ -40,8 +26,8 @@ export default function Create(){
 
           body: JSON.stringify(body)
         }).then((response) => {
-            console.log(response);
-            return response.json(); // do something with response JSON
+            console.log(response.json);
+            
           });
         };
     const onError = (errors, e) => console.log(errors, e);
