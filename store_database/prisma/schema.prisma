@@ -16,8 +16,9 @@ model Item {
   createdAt   DateTime  @default(now())
 }
 model Customer {
-  id          Int       @id @default(autoincrement())
-  firstName        String  // ? makes nullable or optional
-  lastName       String  // ? makes nullable or optional
+  userName        String @id  // ? makes nullable or optional
+  password    String
+  email   String
+  phone String?
   createdAt   DateTime  @default(now())
 }

@@ -22,41 +22,63 @@ const prisma = new PrismaClient({
   log: ['query', 'info', 'warn', 'error'],
 });
 
+// Get all contacts
 router.get('/all', async (req, res) => { 
-  const items = await prisma.contact.findMany();
+  const contacts = await prisma.contact.findMany();
 
-  res.json(items);
+  res.json(contacts);
 });
-
-// Get a contact by id
-router.get('/get/:id', async (req, res) => {
-  const id = req.params.id;
-
-  // Validate id
-  if(isNaN(id)){
-    res.status(400).send('Invalid contact id.');
-    return;
-  }
-
-  const contact = await prisma.contact.findUnique({
+router.get("/sign_in"), async(req,res) => {
+    const { userName,password,email,phone } = req.body; 
+    
+    
+    if(isNaN(id)){
+        res.status(400).send('Could not find account');
+        return;
+      }
+    const item = await prisma.contact.findUnique({
     where: {
-      id: parseInt(id),
+        id: userName,
+        password: password,
     },
+    });
+
+    if(item){
+        res.json(item);
+        return true;
+    } else {
+    res.status(404).send('Account not found.');
+    }  
+
+}
+router.get('/get/:id', async (req, res) => {
+    const id = req.params.id;
+  
+    // Validate id
+    if(isNaN(id)){
+      res.status(400).send('Could not find account');
+      return;
+    }
+  
+    const item = await prisma.contact.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+    });
+  
+    if(item){
+      res.json(item);
+    } else {
+      res.status(404).send('Account not found.');
+    }  
   });
 
-  if(contact){
-    res.json(contact);
-  } else {
-    res.status(404).send('Contact not found.');
-  }  
-});
-
 // Add a new contact
-router.post('/create', upload.single('image'), async (req, res) => {
-  const { firstName, lastName, phone, email } = req.body;  
+router.post('/create', async (req, res) => {
+  const { userName,password,email,phone } = req.body;  
   
   // Validate inputs
-  if(!firstName || !lastName || !phone || !email) {
+  if(!userName || !password) {
     // to-do: delete uploaded file
     res.status(400).send('Required fields must have a value.');
     return;
@@ -66,8 +88,10 @@ router.post('/create', upload.single('image'), async (req, res) => {
 
   const contact = await prisma.contact.create({
     data: {
-      name: itemName,
-      price: itemPrice,
+      userName: userNameNew,
+      password: userPassword,
+      email: userEmail,
+      phone: userPhone,
     }
   });
   
@@ -75,42 +99,30 @@ router.post('/create', upload.single('image'), async (req, res) => {
 });
 
 // Update a contact by id
-router.put('/update/:id', upload.single('image'), (req, res) => {
+router.put('/update/:id', (req, res) => {
   const id = req.params.id;
   // Validate id
   if(isNaN(id)){
-    res.status(400).send('Invalid contact id.');
+    res.status(400).send('Invalid .');
     return;
   }
     // Validate inputs
-    if(!firstName || !lastName || !phone || !email) {
+    if(!firstName || !lastName) {
       // to-do: delete uploaded file
       res.status(400).send('Required fields must have a value.');
       return;
     }
   
-    // to-do: validate proper email, proper phone number, only .jpg/.png/.gig/, file size limit (5MB)
-  
 
- // capture the inputs
- // validate the id
-
- // validate required fields
-
- // Find the contact by id (if not found, return 404)
-
- // store filename in a variable
-
- // if file was uploaded, save that filename, and delete the old file. If not, save the old filename
-
- // Update the database record with prisma (saving either the old or new filename)
- const contact = prisma.contact.update({
+ const contact = prisma.cutomers.update({
   where: {
     id: parseInt(id),
   },
   data: {
-    name: itemName,
-    price: itemPrice,
+    userName: userNameNew,
+    password: userPassword,
+    email: userEmail,
+    phone: userPhone,
   }
 });
     res.send('')
@@ -125,15 +137,7 @@ router.delete('/delete/:id', (req, res) => {
       id: parseInt(id),
     }
   })
-  // verify id is a number
-
-  // Find the contact by id (if not found, return 404)
-
-  // delete the record with prisma
-
-  // delete the file (if contact has one)
-
-  res.send('Delete a contact by id ' + id);
+  res.send('Deleted a Acount by id ' + id);
 });
 
 
