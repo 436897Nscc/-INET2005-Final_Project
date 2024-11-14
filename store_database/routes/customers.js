@@ -7,7 +7,7 @@ const router = express.Router();
 // Multer setup
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/images/'); // save uploaded files in `public/images` folder
+    cb(null, 'public/images/');
   },
   filename: function (req, file, cb) {
     const ext = file.originalname.split('.').pop(); // get file extension
@@ -17,88 +17,81 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Prisma setup
 const prisma = new PrismaClient({
   log: ['query', 'info', 'warn', 'error'],
 });
 
-// Get all contacts
 router.get('/all', async (req, res) => { 
-  const contacts = await prisma.contact.findMany();
+  const cutomers = await prisma.cutomer.findMany();
 
-  res.json(contacts);
+  res.json(cutomers);
 });
-router.get("/sign_in"), async(req,res) => {
+router.get("/sign_in/:id"), async(req,res) => {
     const { userName,password,email,phone } = req.body; 
-    
+    const id = req.params.id;
     
     if(isNaN(id)){
         res.status(400).send('Could not find account');
         return;
       }
-    const item = await prisma.contact.findUnique({
+    const cutomer = await prisma.cutomers.findUnique({
     where: {
-        id: userName,
+        userName: id,
         password: password,
     },
     });
 
-    if(item){
-        res.json(item);
+    if(cutomer){
+        res.json(cutomer);
         return true;
     } else {
-    res.status(404).send('Account not found.');
+      return false;
     }  
 
 }
 router.get('/get/:id', async (req, res) => {
     const id = req.params.id;
-  
-    // Validate id
+
     if(isNaN(id)){
-      res.status(400).send('Could not find account');
+      res.status(400).send('Account not found');
       return;
     }
   
-    const item = await prisma.contact.findUnique({
+    const cutomer = await prisma.cutomer.findUnique({
       where: {
         id: parseInt(id),
       },
     });
   
-    if(item){
-      res.json(item);
+    if(cutomer){
+      res.json(cutomer);
     } else {
       res.status(404).send('Account not found.');
     }  
   });
 
-// Add a new contact
 router.post('/create', async (req, res) => {
   const { userName,password,email,phone } = req.body;  
   
-  // Validate inputs
   if(!userName || !password) {
-    // to-do: delete uploaded file
+   
     res.status(400).send('Required fields must have a value.');
     return;
   }
 
-  // to-do: validate proper email, proper phone number, only .jpg/.png/.gig/, file size limit (5MB)
-
-  const contact = await prisma.contact.create({
+  const cutomer = await prisma.cutomer.create({
     data: {
-      userName: userNameNew,
-      password: userPassword,
-      email: userEmail,
-      phone: userPhone,
+      userName: userName,
+      password: password,
+      email: email,
+      phone: phone,
     }
   });
   
-  res.json(contact);
+  res.json(cutomer);
 });
 
-// Update a contact by id
+
 router.put('/update/:id', (req, res) => {
   const id = req.params.id;
   // Validate id
@@ -106,15 +99,14 @@ router.put('/update/:id', (req, res) => {
     res.status(400).send('Invalid .');
     return;
   }
-    // Validate inputs
+  
     if(!firstName || !lastName) {
-      // to-do: delete uploaded file
       res.status(400).send('Required fields must have a value.');
       return;
     }
   
 
- const contact = prisma.cutomers.update({
+ const cutomer = prisma.cutomers.update({
   where: {
     id: parseInt(id),
   },
@@ -126,18 +118,18 @@ router.put('/update/:id', (req, res) => {
   }
 });
     res.send('')
-  res.send('Update a contact by ' + id);
+  res.send('Updated customer acoount: ' + id);
 });
 
-// Delete a contact id
+
 router.delete('/delete/:id', (req, res) => {
   const id = req.params.id;
-  prisma.contact.delete({
+  prisma.cutomer.delete({
     where: {
       id: parseInt(id),
     }
   })
-  res.send('Deleted a Acount by id ' + id);
+  res.send('Deleted a Acount by id: ' + id);
 });
 
 
