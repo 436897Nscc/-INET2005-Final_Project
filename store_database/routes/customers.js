@@ -78,17 +78,29 @@ router.post('/create', async (req, res) => {
     res.status(400).send('Required fields must have a value.');
     return;
   }
-
-  const cutomer = await prisma.cutomer.create({
-    data: {
-      userName: userName,
-      password: password,
-      email: email,
-      phone: phone,
-    }
-  });
   
-  res.json(cutomer);
+  const cutomerFind = await prisma.cutomer.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  if(cutomerFind){
+    res.status(404).send('A account with that username is already in use');
+  } else {
+      
+    const cutomer = await prisma.cutomer.create({
+      data: {
+        userName: userName,
+        password: password,
+        email: email,
+        phone: phone,
+      }
+    });
+    
+    res.json(cutomer);
+  }  
+  
 });
 
 
