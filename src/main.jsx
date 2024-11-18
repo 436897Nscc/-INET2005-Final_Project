@@ -8,6 +8,9 @@ import Delete from './routes/Checkout'
 import Update from './routes/Account'
 import Create from './routes/Item'
 
+const myShoopingCart = {};
+export default myShoopingCart;
+
 
 const router = createBrowserRouter([
     {
@@ -24,8 +27,13 @@ const router = createBrowserRouter([
     },
     {
         path: "/Account",
-        element: <Update />
+        element: <Acount />
     },
+    {
+        path: "/Sign In",
+        element: <SignIn />
+    },
+    
 ]);
 
 createRoot(document.getElementById('root')).render(
