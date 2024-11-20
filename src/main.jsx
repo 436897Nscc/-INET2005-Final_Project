@@ -3,38 +3,37 @@ import { createRoot } from 'react-dom/client'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
-import Home from './routes/home'
-import Delete from './routes/Checkout'
-import Update from './routes/Account'
-import Create from './routes/Item'
-
+import Home from './routes/home';
+import Signup from './routes/Signup';
+import Login from './routes/Login';
+import Logout from './routes/Logout';
+import Item from './routes/Item';
 const myShoopingCart = {};
 export default myShoopingCart;
 
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Home />
-    },
-    {
-        path: "/Checkout",
-        element: <Checkout />
+    {
+      path: "/",
+      element: <Home />
     },
     {
-        path: "/Item",
-        element: <Item />
-    },
-    {
-        path: "/Account",
-        element: <Acount />
+      path: "/signup",
+      element: <Signup />
     },
     {
-        path: "/Sign In",
-        element: <SignIn />
+      path: "/login",
+      element: <Login />
     },
-    
-]);
+    {
+      path: "/logout",
+      element: <Logout />
+    },
+    {
+      path: "/item",
+      element: <Item />
+    },
+  ]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
