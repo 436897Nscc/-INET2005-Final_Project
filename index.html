@@ -6,29 +6,16 @@
     <title>My Login App</title>
   </head>
   <body>
-    <div class="container" style="width: auto;text-align: left;">
-      <header>
-        <ul class="nav">
-          
-          <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/address">My Address</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/signup">My Address</a>
-          </li>
-        </ul>
-      </header>
-      <div id="root"></div>
-    </div>
+    <header>
+      <div id="headerNav" class="nav" style="display: flex;justify-content:center;">  
+        <a class="nav-link" href="/">Home</a>  
+        <a class="nav-link" href="/login">Login</a>
+        <a class="nav-link" href="/logout">Logout</a>
+        <a class="nav-link" href="/address">My Address</a>
+        <a class="nav-link" href="/signup">Signup</a>
+      </div>
+    </header>
+    <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

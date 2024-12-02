@@ -18,16 +18,26 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+#headerNav{
+  border:#f9f9f9;
+  border-style: solid;
+  border-width: 2px;
+}
+#headerNav a{
+  margin-left: 10px;
+}
 a:hover {
   color: #535bf2;
 }
 
 body {
   margin: 0;
-  display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 h1 {
