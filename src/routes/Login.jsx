@@ -36,8 +36,8 @@ export default function Login() {
       <form onSubmit={handleSubmit(formSubmit)} method="post" className="w-25">
         <div className="mb-3">
           <label className="form-label">Username</label>
-          <input {...register("Username", { required: "Username is required." })} type="text" className="form-control bg-light" />
-          {errors.username && <span className="text-danger">{errors.item.message}</span>}
+          <input {...register("userName", { required: "Username is required." })} type="text" className="form-control bg-light" />
+          {errors.userName && <span className="text-danger">{errors.userName.message}</span>}
         </div>
         <div className="mb-3">
           <label className="form-label">Password</label>

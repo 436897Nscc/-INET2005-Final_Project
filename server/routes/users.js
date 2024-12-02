@@ -51,17 +51,17 @@ router.post('/signup', async (req,res) => {
 
 router.post('/login', async (req,res) => {
   // get user inputs
-  const { username, password } = req.body;
+  const { userName, password } = req.body;
 
   // validate the inputs
-  if(!username || !password) {
+  if(!userName || !password) {
     return res.status(400).send('Please enter a vaild username or password');
   }
 
   // find user in database
   const existingUser = await prisma.account.findUnique({
     where: {
-      username: username,
+      username: userName,
     }
   });
   if (!existingUser) {
