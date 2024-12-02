@@ -19,12 +19,13 @@ model Item {
 }
 
 model Account {
-  userName          String      @id
-  password    String 
-  email       String
-  street      String
-  city        String  
-  country     String
-  postal_code String
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String
+  email      String   @unique
+  street     String?
+  city       String?
+  country    String?
+  postal_code String?
 }
 

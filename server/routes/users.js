@@ -1,5 +1,5 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import { Prisma,PrismaClient } from '@prisma/client';
 import { hashPassword, comparePassword } from '../lib/utility.js'
 
 const router = express.Router();
@@ -8,10 +8,11 @@ const prisma = new PrismaClient();
 
 router.post('/signup', async (req,res) => {
   // get user inputs
-  return res.status(400).send(req.body);
-  const {username, password,street,city,country,postal_code } = req.body  ;
+  const {userName, password,email,street,city,country,postal_code } = req.body  ;
 
-  if (!username){
+  
+
+  if (!userName){
     return res.status(400).send('Missing username');
   }
   else if (!password){
@@ -20,46 +21,29 @@ router.post('/signup', async (req,res) => {
   else if (!email){
     return res.status(400).send('Missing email');
   }
-  else if (!street){
-    return res.status(400).send('Missing street');
-  }
-  else if (!city){
-    return res.status(400).send('Missing city');
-  }
-  else if (!country){
-    return res.status(400).send('Missing country');
-  }
-  else if (!postal_code){
-    return res.status(400).send('Missing postal code');
-  }
+
+  
 
 
 
-  // check for existing user
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      username: username,
-    }
-  });
-  if (existingUser) {
-    return res.status(400).send('User already exists');
-  }
+  // check for existing us
 
   // hash (encrypt) the password
   const hashedPassword = await hashPassword(password);
 
+
   // add user to database
-  const user = await prisma.user.create({
-      data: {
-        username: username,
-        password: hashedPassword,
-        email: email,
-        street: street,
-        city: city,
-        country: country,
-        postal_code: postal_code
-      },
-    });
+  const user = await prisma.account.create({
+    data: {
+      username: userName, // Map to match the schema,
+      password: hashedPassword,
+      email,
+      street,
+      city,
+      country,
+      postal_code,
+    },
+  });
 
   // send a response
   res.json({'user' : user});
@@ -75,7 +59,7 @@ router.post('/login', async (req,res) => {
   }
 
   // find user in database
-  const existingUser = await prisma.user.findUnique({
+  const existingUser = await prisma.account.findUnique({
     where: {
       username: username,
     }
@@ -103,6 +87,11 @@ router.post('/logout', (req,res) => {
   req.session.destroy();
   res.send('Successful logout');
 });
+router.get('/all', async (req, res) => { 
+  const users = await prisma.account.findMany();
+
+  res.json(users);
+}); 
 
 router.get('/session', (req,res) => {
   // return logged in user  

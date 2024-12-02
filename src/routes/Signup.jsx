@@ -8,23 +8,24 @@ export default function Signup() {
 
   // form submit function
   async function formSubmit(data) {
-    console.log(JSON.stringify(data));
-    const request = new Request("http://localhost:3000/api/users/signup", {
+    const request = await fetch("http://localhost:3000/api/users/signup", {
       method: "POST",
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
+      }
+ 
     });
-    const response1 = await fetch(request);
-    console.log(response1.status);
   }
 
   return (
     <>
       <h1>Signup</h1>
-      <form onSubmit={handleSubmit(formSubmit)} method="post" className="w-25">
+      <form onSubmit={handleSubmit(formSubmit)} method="POST" className="w-25">
         <div className="mb-3">
           <label className="form-label">username</label>
-          <input {...register("username", { required: "username is required." })} type="text" className="form-control bg-light" />
-          {errors.username && <span className="text-danger">{errors.username.message}</span>}
+          <input {...register("userName", { required: "username is required." })} type="text" className="form-control bg-light" />
+          {errors.userName && <span className="text-danger">{errors.userName.message}</span>}
         </div>
         <div className="mb-3">
           <label className="form-label">Password</label>
