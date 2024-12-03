@@ -1,6 +1,5 @@
 import express from 'express';
 import { Prisma,PrismaClient } from '@prisma/client';
-import { hashPassword, comparePassword } from '../lib/utility.js'
 
 const router = express.Router();
 
@@ -24,7 +23,7 @@ router.post('/add', async (req,res) => {
       }
     const item = await prisma.item.create({
         data: {
-          price: itemPrice,
+          price: parseInt(itemPrice),
           name: itemName
         },
       });
