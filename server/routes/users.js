@@ -85,8 +85,8 @@ router.post('/login', async (req,res) => {
 
   // setup user session data
   req.session.email = existingUser.email;
-  req.session.user_id = existingUser.username;
-  console.log('logged in user: ' + req.session.username);
+  req.session.user_id = existingUser.userName;
+  console.log('logged in user: ' + req.session.userName);
 
   // send response
   res.send('Login successful');
@@ -98,7 +98,6 @@ router.post('/logout', (req,res) => {
 });
 router.get('/all', async (req, res) => { 
   const users = await prisma.account.findMany();
-
   res.json(users);
 }); 
 

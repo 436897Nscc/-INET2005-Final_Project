@@ -16,6 +16,7 @@ model Item {
   name      String
     
   createdAt DateTime @default(now())
+    carts     Cart[]   
 }
 
 model Account {
@@ -27,5 +28,17 @@ model Account {
   city       String?
   country    String?
   postal_code String?
-}
 
+    carts     Cart[]
+}
+model Cart {
+  id        Int      @id @default(autoincrement())
+  quantity  Int      
+  createdAt DateTime @default(now())
+
+  account   Account  @relation(fields: [accountId], references: [id])
+  accountId Int      @unique
+
+  item      Item     @relation(fields: [itemId], references: [id])
+  itemId    Int      @unique
+}
