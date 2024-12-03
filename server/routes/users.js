@@ -23,6 +23,15 @@ router.post('/signup', async (req,res) => {
   }
 
   
+  // check for existing user
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      username: userName,
+    }
+  });
+  if (existingUser) {
+    return res.status(400).send('User already exists');
+  }
 
 
 

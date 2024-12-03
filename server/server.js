@@ -3,7 +3,7 @@ import cors from 'cors';
 import session from 'express-session';
 import usersRouter from './routes/users.js';
 import homeRouter from './routes/home.js';
-
+import itemRouter from './routes/items.js';
 const port = process.env.PORT || 3000;
 const app = express();
 
@@ -34,6 +34,7 @@ app.use(session({
 // routes
 app.use('/api/', homeRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/items', itemRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
