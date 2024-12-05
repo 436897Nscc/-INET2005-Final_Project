@@ -3,6 +3,24 @@ import { useState, useEffect } from "react";
 export default function Home(){
   const [user, setUser] = useState('');
   const [items, setItems] = useState([]); 
+  async function addItem(data) {
+    if(user == undefined){
+     return alert("Please log in to add items to your cart");
+    }
+    const amountAdded = document.getElementById("amount" + data).value;
+    var items = {itemShopId: data,amountItem:amountAdded}
+    console.log(items);
+    const response = await fetch("http://localhost:3000/api/items/cart/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: items,
+      credentials: 'include' // make fetch include cookies in the request
+    });
+    
+    console.log("check")
+  }
   useEffect(() => {
     async function showItems() {
       try {
@@ -48,9 +66,13 @@ export default function Home(){
                 <p>
                   <strong>Name:</strong> {item.name}
                 </p>
+                
                 <p>
                   <strong>Price:</strong> ${item.price}
                 </p>
+                <button onClick={() => addItem(item.id)}>Add Item</button>
+                
+                <input type="number" id={"amount" + item.id} defaultValue="1" name="quantity" min="1" max="5"></input>
               </div>
             ))
           ) : (
