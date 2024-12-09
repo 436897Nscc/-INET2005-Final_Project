@@ -23,7 +23,7 @@ model Account {
   id         Int      @id @default(autoincrement())
   username   String   @unique
   password   String
-  email      String   @unique
+  email      String   @unique 
   street     String?
   city       String?
   country    String?

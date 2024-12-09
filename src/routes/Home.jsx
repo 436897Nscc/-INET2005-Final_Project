@@ -6,6 +6,7 @@ export default function Home(){
 
 
   async function addItem(data) {
+    // Checks if their is a current user signed in
     if(user == undefined){
      return alert("Please log in to add items to your cart");
     }
@@ -26,6 +27,7 @@ export default function Home(){
     console.log("check")
   }
   useEffect(() => {
+    // Grabs all the items to load into the page. Sends a error to the console if their are any problems.
     async function showItems() {
       try {
         const response = await fetch("http://localhost:3000/api/items/all", {
@@ -75,8 +77,8 @@ export default function Home(){
                   <strong>Price:</strong> ${item.price}
                 </p>
                 <button onClick={() => addItem(item.id)}>Add Item</button>
-                
-                <input type="number" id={"amount" + item.id} defaultValue="1" name="quantity" min="1" max="5"></input>
+              
+                <input type="number" id={"amount" + item.id} defaultValue="1" name="quantity" min="1" max="99"></input>
               </div>
             ))
           ) : (

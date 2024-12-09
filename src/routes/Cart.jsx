@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { useState,useEffect } from "react";
 export default function Cart() {
+  var totalAmount = 0;
   const [user, setUser] = useState("Nobody logged in");
   const [items, setItems] = useState([]); // All items
   const [cart, setCart] = useState([]); // User's cart items
@@ -22,7 +23,6 @@ export default function Cart() {
         if (response.ok) {
           const data = await response.json();
           setCartItems(data.cart || []);
-          setMessage(data.message || "");
         } else if (response.status === 401) {
           setMessage("Please log in to view your cart.");
         } else {
@@ -47,14 +47,17 @@ export default function Cart() {
               <p><strong>Item:</strong> {cartItem.item.name}</p>
               <p><strong>Price:</strong> ${cartItem.item.price}</p>
               <p><strong>Quantity:</strong> {cartItem.quantity}</p>
+             
               <hr />
             </li>
           ))}
+       
         </ul>
       ) : (
         !message && <p>Your cart is empty.</p>
       )}
     </div>
+    <>{totalAmount}$</>
       
     </>
   )

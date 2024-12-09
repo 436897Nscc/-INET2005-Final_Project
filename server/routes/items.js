@@ -6,6 +6,8 @@ const router = express.Router();
 const prisma = new PrismaClient();
 router.post('/cart/add', async (req, res) => {
   const { itemId, amount } = req.body; 
+
+  // Grabs the current users  
   const userId = req.session?.user_id;
   if (!itemId || isNaN(itemId) || !amount || isNaN(amount) || amount <= 0) {
     return res.status(400).json({
