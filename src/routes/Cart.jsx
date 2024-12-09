@@ -7,52 +7,54 @@ export default function Cart() {
   const [items, setItems] = useState([]); // All items
   const [cart, setCart] = useState([]); // User's cart items
   // react-hook-form
-  const { register, handleSubmit, formState: { errors } } = useForm();
-
-  const [loginFail, setLoginFail] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  const [message, setMessage] = useState("");
 
   // form submit function
   useEffect(() => {
-    async function fetchCart() {
-      try {
+    async function fetchCartItems() {
+   
         const response = await fetch("http://localhost:3000/api/items/cart", {
           method: "GET",
-          credentials: "include", // Include cookies/session
+          credentials: "include", // Include session cookies
         });
+
         if (response.ok) {
           const data = await response.json();
-          setCart(data);
+          setCartItems(data.cart || []);
+          setMessage(data.message || "");
         } else if (response.status === 401) {
-          console.log("User is not logged in.");
-          setCart([]);
+          setMessage("Please log in to view your cart.");
+        } else {
+          const errorData = await response.json();
+          setMessage(errorData.error || "An error occurred while fetching your cart.");
         }
-      } catch (error) {
-        console.error("Error fetching cart:", error);
-      }
+      
     }
 
-    async function fetchUserSession() {
-      try {
-        const response = await fetch("http://localhost:3000/api/users/session", {
-          method: "GET",
-          credentials: "include",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user || "Unknown User");
-        }
-      } catch (error) {
-        console.error("Error fetching user session:", error);
-      }
-    }
-
-    fetchCart();
-    fetchUserSession();
+    fetchCartItems();
   }, []);
   
   return (
     <>
-      <h1>Cart</h1>
+          <div>
+      <h1>Your Cart</h1>
+      {message && <p>{message}</p>}
+      {cartItems.length > 0 ? (
+        <ul>
+          {cartItems.map((cartItem) => (
+            <li key={cartItem.id}>
+              <p><strong>Item:</strong> {cartItem.item.name}</p>
+              <p><strong>Price:</strong> ${cartItem.item.price}</p>
+              <p><strong>Quantity:</strong> {cartItem.quantity}</p>
+              <hr />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        !message && <p>Your cart is empty.</p>
+      )}
+    </div>
       
     </>
   )

@@ -6,21 +6,42 @@ const router = express.Router();
 const prisma = new PrismaClient();
 router.post('/cart/add', async (req, res) => {
   const { itemId, amount } = req.body; 
-  const userId = req.session.user_id; 
-
-  // Validate request data
-  if (!itemId || amount < 1) {
-    return res.status(400).send('Invalid item ID or quantity.');
+  const userId = req.session?.user_id;
+  if (!itemId || isNaN(itemId) || !amount || isNaN(amount) || amount <= 0) {
+    return res.status(400).json({
+      error: "Invalid input. Ensure itemId and amount are valid positive numbers.",
+    });
   }
+  const parsedUserId = parseInt(userId);
+  const parsedItemId = parseInt(itemId);
+  const parsedAmount = parseInt(amount);
 
 
+
+
+  // Find if there already item in cart
+  const existingCartItem = await prisma.cart.findFirst({
+    where: {
+      accountId: userId,
+      itemId: parsedItemId,
+    },
+  });
+
+  if (existingCartItem) {
+    // Update the quantity if the item exists. If so add the target amount to item in cart
+    const updatedCartItem = await prisma.cart.update({
+      where: { id: existingCartItem.id },
+      data: { quantity: existingCartItem.quantity + parsedAmount },
+    });
+    return res.status(200).json({ message: 'Cart updated.', cartItem: updatedCartItem });
+  }
 
     // Add a new cart item
     const newCartItem = await prisma.cart.create({
       data: {
-        accountId: parseInt(userId),
-        itemId: parseInt(itemId),
-        quantity: parseInt(amount),
+        accountId: parsedUserId,
+        itemId: parsedItemId,
+        quantity: parsedAmount,
       },
     });
 
@@ -75,7 +96,7 @@ router.get('/item/:id', async (req, res) => {
 
 
   router.get('/cart', async (req, res) => {
-    const userId = req.session.user_id; 
+    const userId = req.session?.user_id;
   
     
       // Fetch the user's cart items
@@ -90,7 +111,7 @@ router.get('/item/:id', async (req, res) => {
       if ( cartItems.length === 0) {
         return res.status(200).json({ message: "Your cart is empty."});
       } 
-  
+      res.status(200).json({ cart: cartItems });
     
   });
 export default router;

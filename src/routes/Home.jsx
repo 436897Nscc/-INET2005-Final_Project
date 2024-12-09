@@ -3,22 +3,26 @@ import { useState, useEffect } from "react";
 export default function Home(){
   const [user, setUser] = useState('');
   const [items, setItems] = useState([]); 
+
+
   async function addItem(data) {
     if(user == undefined){
      return alert("Please log in to add items to your cart");
     }
     const amountAdded = document.getElementById("amount" + data).value;
-    var items = {itemShopId: data,amountItem:amountAdded}
+    console.log("User ID from session:", user);
+    const items = { itemId: data, amount: amountAdded };
     console.log(items);
     const response = await fetch("http://localhost:3000/api/items/cart/add", {
       method: "POST",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json"
       },
-      body: items,
-      credentials: 'include' // make fetch include cookies in the request
+         credentials: 'include',
+      body: JSON.stringify(items),
     });
-    
+
     console.log("check")
   }
   useEffect(() => {

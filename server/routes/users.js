@@ -85,8 +85,8 @@ router.post('/login', async (req,res) => {
 
   // setup user session data
   req.session.email = existingUser.email;
-  req.session.user_id = existingUser.userName;
-  console.log('logged in user: ' + req.session.userName);
+  req.session.user_id = existingUser.id;
+  console.log('logged in user: ', req.session);
 
   // send response
   res.send('Login successful');
