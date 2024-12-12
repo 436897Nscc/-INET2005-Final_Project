@@ -50,9 +50,16 @@ router.post('/cart/add', async (req, res) => {
     res.status(201).json({ message: 'Item added to cart.', cartItem: newCartItem });
   
 });
+router.delete('/cart/delete/:id', async (req,res) => {  
+  const cartItemId = req.params.id;   
+  const deletedCartItem = await prisma.cart.delete({
+    where: {
+      id: parseInt(cartItemId),
+    },
+  });
+});
 
-
-router.post('/add', async (req,res) => {
+router.post('/add', async (req,res) => {  
     const {itemPrice,itemName} = req.body;
     if(!itemPrice){
       return  res.status(400).send("Invaild item price");
@@ -74,18 +81,18 @@ router.get('/all', async (req, res) => {
 
   res.json(items);
 }); 
-router.get('/item/:id', async (req, res) => { 
-    const id = req.params.id;
+router.get('/get/:id', async (req, res) => { 
+    const itemid = req.params.id;
 
     // Validate id
-    if(isNaN(id)){
+    if(isNaN(itemid)){
       res.status(400).send('Invalid item id.');
       return;
     }
   
     const itemGrab = await prisma.item.findUnique({
       where: {
-        id: parseInt(id),
+        id: parseInt(itemid),
       },
     });
   
@@ -113,7 +120,11 @@ router.get('/item/:id', async (req, res) => {
       if ( cartItems.length === 0) {
         return res.status(200).json({ message: "Your cart is empty."});
       } 
-      res.status(200).json({ cart: cartItems });
+      const total = cartItems.reduce((sum, cartItem) => {
+        return sum + cartItem.quantity * cartItem.item.price;
+      }, 0);
+  
+      res.status(200).json({ cart: cartItems, total });
     
   });
 export default router;

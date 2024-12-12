@@ -8,9 +8,8 @@ import Login from './routes/Login';
 import Logout from './routes/Logout';
 import Item from './routes/Item';
 import Cart from './routes/Cart';
-const myShoopingCart = {};
-export default myShoopingCart;
-
+const itemId = 0;
+export default itemId;
 
 const router = createBrowserRouter([
     {
@@ -30,7 +29,7 @@ const router = createBrowserRouter([
       element: <Logout />
     },
     {
-      path: "/item",
+      path: "/item/:itemId",
       element: <Item />
     },
     {

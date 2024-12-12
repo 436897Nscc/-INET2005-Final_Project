@@ -5,13 +5,27 @@ import { useState,useEffect } from "react";
 export default function Cart() {
   var totalAmount = 0;
   const [user, setUser] = useState("Nobody logged in");
-  const [items, setItems] = useState([]); // All items
-  const [cart, setCart] = useState([]); // User's cart items
-  // react-hook-form
-  const [cartItems, setCartItems] = useState([]);
-  const [message, setMessage] = useState("");
 
-  // form submit function
+  const [cartItems, setCartItems] = useState([]);
+
+  const [total, setTotal] = useState(0);
+
+
+  async function deleteItem(data) {
+    const response = await fetch(`http://localhost:3000/api/items/cart/delete/${data}`, {
+      method: "DELETE",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+         credentials: 'include',
+    });
+    
+      window.location.href = '/cart';
+    
+    
+
+  }
   useEffect(() => {
     async function fetchCartItems() {
    
@@ -23,11 +37,9 @@ export default function Cart() {
         if (response.ok) {
           const data = await response.json();
           setCartItems(data.cart || []);
+          setTotal(data.total || 0);
         } else if (response.status === 401) {
-          setMessage("Please log in to view your cart.");
-        } else {
-          const errorData = await response.json();
-          setMessage(errorData.error || "An error occurred while fetching your cart.");
+          return alert("Please log in to view your cart.");
         }
       
     }
@@ -39,7 +51,6 @@ export default function Cart() {
     <>
           <div>
       <h1>Your Cart</h1>
-      {message && <p>{message}</p>}
       {cartItems.length > 0 ? (
         <ul>
           {cartItems.map((cartItem) => (
@@ -47,17 +58,17 @@ export default function Cart() {
               <p><strong>Item:</strong> {cartItem.item.name}</p>
               <p><strong>Price:</strong> ${cartItem.item.price}</p>
               <p><strong>Quantity:</strong> {cartItem.quantity}</p>
-             
+              <button onClick={() => deleteItem(cartItem.item.id)}>Remove Item</button>
               <hr />
             </li>
           ))}
        
         </ul>
       ) : (
-        !message && <p>Your cart is empty.</p>
+      <p>You currently don't have any item's in your cart</p>
       )}
     </div>
-    <>{totalAmount}$</>
+    <>Your total Amount: ${total}</>
       
     </>
   )

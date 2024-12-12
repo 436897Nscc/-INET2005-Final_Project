@@ -1,19 +1,16 @@
 import { useState, useEffect } from "react";
-
+import { useNavigate } from 'react-router-dom';
 export default function Home(){
   const [user, setUser] = useState('');
   const [items, setItems] = useState([]); 
-
-
+  const navigate = useNavigate();
   async function addItem(data) {
     // Checks if their is a current user signed in
     if(user == undefined){
      return alert("Please log in to add items to your cart");
     }
     const amountAdded = document.getElementById("amount" + data).value;
-    console.log("User ID from session:", user);
     const items = { itemId: data, amount: amountAdded };
-    console.log(items);
     const response = await fetch("http://localhost:3000/api/items/cart/add", {
       method: "POST",
       mode: "cors",
@@ -23,26 +20,21 @@ export default function Home(){
          credentials: 'include',
       body: JSON.stringify(items),
     });
-
-    console.log("check")
   }
+  
   useEffect(() => {
     // Grabs all the items to load into the page. Sends a error to the console if their are any problems.
     async function showItems() {
-      try {
-        const response = await fetch("http://localhost:3000/api/items/all", {
+        const response = await fetch('http://localhost:3000/api/items/all', {
           method: "GET",
         });
         if (response.ok) {
           const data = await response.json();
           setItems(data); // Save items to state
         } else {
-          console.error("Failed to fetch items.");
+          return alert("Failed to fetch items.");
         }
-      } catch (error) {
-        console.error("Error fetching items:", error);
       }
-    }
     async function getUserSession() {
       const response = await fetch('http://localhost:3000/api/users/session', {
         method: "GET",
@@ -69,8 +61,9 @@ export default function Home(){
           {items.length > 0 ? (
             items.map((item) => (
               <div key={item.id}>
-                <p>
-                  <strong>Name:</strong> {item.name}
+                <p >
+                
+                 <h3 onClick={() => navigate(`/item/${item.id} `)} style={{ cursor: "pointer", color: "blue" }}> {item.name} </h3>
                 </p>
                 
                 <p>
@@ -85,7 +78,7 @@ export default function Home(){
             <p>No items available.</p>
           )}
         </div>
-      <p>User: {user}</p>
+      <p>User: {user}</p> 
     </>
   )
 }
